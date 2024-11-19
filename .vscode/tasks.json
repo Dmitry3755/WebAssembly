@@ -8,8 +8,11 @@
             "type": "shell",
             "command": "emcc",
             "args": [
-                "main.cpp",
-                "-o", "index.html"
+                "src/main.cpp",
+                "-o", "index.html", 
+                "-s", "WASM=1",
+                "-s", "EXIT_RUNTIME=1",
+                "-s", "USE_SDL=2"    
             ],
             "group": {
                 "kind": "build",
