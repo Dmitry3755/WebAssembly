@@ -10,13 +10,17 @@
             "args": [
                 "src/main.cpp",
                 "-lSDL2_ttf",
-                "-o", "index.html",
+                "-g",
+                "-o", "draw.html",
+                "--no-entry",
                 "-s",  "WASM=1",
                 "-s","EXIT_RUNTIME=1",
                 "-s","USE_SDL=2",
                 "-s","USE_FREETYPE=1",
                 "-lharfbuzz",
-                "--preload-file", "assets/RubberNippleFactoryBlack.ttf"
+                "--preload-file", "assets/RubberNippleFactoryBlack.ttf",
+                "-sEXPORTED_FUNCTIONS=[_main, _malloc, _free, _displayTextInWasm]",
+                "-sEXPORTED_RUNTIME_METHODS=[ccall, stringToUTF8]",
             ],
             "group": {
                 "kind": "build",
