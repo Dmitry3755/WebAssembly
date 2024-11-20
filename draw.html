@@ -240,12 +240,20 @@
     };
     Module.onRuntimeInitialized = function () {
       let urlParams = new URLSearchParams(window.location.search);
+      let orientation = urlParams.get('o');
       let text = urlParams.get('t');
+      console.log('Ориентация текста', orientation);
       console.log('Полученный текст:', text);
+      if (orientation) {
+        let orientationPointer = Module._malloc(orientation.length + 1);
+        Module.stringToUTF8(orientation, orientationPointer, text.length + 1);
+        Module._getOrientation(orientationPointer);
+        Module._free(orientationPointer);
+      }
       if (text) {
         let textPointer = Module._malloc(text.length + 1);
         Module.stringToUTF8(text, textPointer, text.length + 1);
-        Module._displayTextInWasm(textPointer);
+        Module._getText(textPointer);
         Module._free(textPointer);
       }
     };

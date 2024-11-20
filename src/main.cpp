@@ -2,21 +2,27 @@
 #include <stdio.h>
 #include <SDL.h>
 #include <SDL_ttf.h>
+#include <SDL_render.h>
 #include <emscripten/emscripten.h>
+#include "variables.h"
 
 SDL_Window *window = nullptr;
 SDL_Renderer *renderer = nullptr;
 SDL_Texture *textTexture = nullptr;
 TTF_Font *font = nullptr;
-
-const char *text = nullptr;
-const char *fontPath = "/assets/RubberNippleFactoryBlack.ttf";
 SDL_Color textColor = {255, 255, 255, 255};
+
 bool textChange = false;
+const char *text = nullptr;
+const char *orientation = nullptr;
+
+const char *fontPath = "/assets/RubberNippleFactoryBlack.ttf";
+double angle = 90.0;
+int textWidth, textHeight;
 
 void textureInitialize()
 {
-    TTF_Font *font = TTF_OpenFont(fontPath, 32);
+    font = TTF_OpenFont(fontPath, 32);
     if (!font)
     {
         printf("Failed to load font: %s\n", TTF_GetError());
@@ -39,17 +45,6 @@ void textureInitialize()
     }
 }
 
-extern "C"
-{
-    void displayTextInWasm(char *_text)
-    {
-        if (text)
-            free((void *)text);
-        text = strdup(_text);
-        textChange = true;
-    }
-}
-
 void render()
 {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
@@ -62,10 +57,30 @@ void render()
     }
     if (textTexture)
     {
-        int textWidth, textHeight;
-        SDL_QueryTexture(textTexture, nullptr, nullptr, &textWidth, &textHeight);
-        SDL_Rect destRect = {100, 100, textWidth, textHeight};
-        SDL_RenderCopy(renderer, textTexture, nullptr, &destRect);
+        switch (*orientation)
+        {
+        case 'h':
+        {
+            SDL_QueryTexture(textTexture, nullptr, nullptr, &textWidth, &textHeight);
+            SDL_Rect destRect = {100, 100, textWidth, textHeight};
+            SDL_RenderCopy(renderer, textTexture, nullptr, &destRect);
+            break;
+        }
+        case 'v':
+        {
+            SDL_QueryTexture(textTexture, nullptr, nullptr, &textWidth, &textHeight);
+            SDL_Rect destRect = {100, 100, textWidth, textHeight};
+            SDL_RenderCopyEx(renderer, textTexture, nullptr, &destRect, 90, nullptr, SDL_FLIP_NONE);
+            break;
+        }
+        default:
+        {
+            SDL_QueryTexture(textTexture, nullptr, nullptr, &textWidth, &textHeight);
+            SDL_Rect destRect = {100, 100, textWidth, textHeight};
+            SDL_RenderCopy(renderer, textTexture, nullptr, &destRect);
+            break;
+        }
+        }
     }
 
     SDL_RenderPresent(renderer);
@@ -88,7 +103,7 @@ int main()
 
     window = SDL_CreateWindow("WebAssembly", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_OPENGL);
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    textureInitialize();    
+    textureInitialize();
     emscripten_set_main_loop(render, 0, 1);
 
     return 0;

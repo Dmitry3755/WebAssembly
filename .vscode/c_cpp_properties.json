@@ -4,8 +4,10 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "C:/emsdk/upstream/emscripten/system/include/**",
-                "C:/emsdk/upstream/emscripten/system/include/SDL/*"
+                "${workspaceFolder}/src",
+                "C:/emsdk/upstream/emscripten/system/include/*",
+                "C:/emsdk/upstream/emscripten/system/include/SDL/SDL_ttf/",
+                "C:/emsdk/downloads/SDL2/include/*"
             ],
             "defines": [
                 "_DEBUG",

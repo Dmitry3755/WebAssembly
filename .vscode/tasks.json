@@ -8,8 +8,8 @@
             "type": "shell",
             "command": "emcc",
             "args": [
-                "src/main.cpp",
-                "-lSDL2_ttf",
+                "src/main.cpp", "src/api.cpp",
+                "-lSDL2_ttf", "-lSDL2",
                 "-g",
                 "-o", "draw.html",
                 "--no-entry",
@@ -19,8 +19,8 @@
                 "-s","USE_FREETYPE=1",
                 "-lharfbuzz",
                 "--preload-file", "assets/RubberNippleFactoryBlack.ttf",
-                "-sEXPORTED_FUNCTIONS=[_main, _malloc, _free, _displayTextInWasm]",
-                "-sEXPORTED_RUNTIME_METHODS=[ccall, stringToUTF8]",
+                "-sEXPORTED_FUNCTIONS=[_main, _malloc, _free, _getText, _getOrientation]",
+                "-sEXPORTED_RUNTIME_METHODS=[ccall, stringToUTF8]"
             ],
             "group": {
                 "kind": "build",
