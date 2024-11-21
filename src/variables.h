@@ -8,7 +8,8 @@ extern SDL_Texture *textTexture;
 extern TTF_Font *font;
 extern SDL_Color textColor;
 
-extern const char *text;
+extern char *originalText;
+extern char *orientationText;
 extern const char *orientation;
 
 extern bool textChange;

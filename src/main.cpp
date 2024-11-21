@@ -1,10 +1,10 @@
 #include <iostream>
-#include <stdio.h>
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include <SDL_render.h>
 #include <emscripten/emscripten.h>
 #include "variables.h"
+#include "render.cpp"
 
 SDL_Window *window = nullptr;
 SDL_Renderer *renderer = nullptr;
@@ -13,78 +13,9 @@ TTF_Font *font = nullptr;
 SDL_Color textColor = {255, 255, 255, 255};
 
 bool textChange = false;
-const char *text = nullptr;
+char *originalText = nullptr;
+char *orientationText = nullptr;
 const char *orientation = nullptr;
-
-const char *fontPath = "/assets/RubberNippleFactoryBlack.ttf";
-double angle = 90.0;
-int textWidth, textHeight;
-
-void textureInitialize()
-{
-    font = TTF_OpenFont(fontPath, 32);
-    if (!font)
-    {
-        printf("Failed to load font: %s\n", TTF_GetError());
-        TTF_Quit();
-        SDL_Quit();
-    }
-    else
-    {
-        SDL_Surface *textSurface = TTF_RenderText_Blended(font, text, textColor);
-        if (textSurface)
-        {
-            textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
-            SDL_FreeSurface(textSurface);
-        }
-        else
-        {
-            printf("Failed to render text: %s\n", TTF_GetError());
-        }
-        TTF_CloseFont(font);
-    }
-}
-
-void render()
-{
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    SDL_RenderClear(renderer);
-
-    if (textChange)
-    {
-        SDL_DestroyTexture(textTexture);
-        textureInitialize();
-    }
-    if (textTexture)
-    {
-        switch (*orientation)
-        {
-        case 'h':
-        {
-            SDL_QueryTexture(textTexture, nullptr, nullptr, &textWidth, &textHeight);
-            SDL_Rect destRect = {100, 100, textWidth, textHeight};
-            SDL_RenderCopy(renderer, textTexture, nullptr, &destRect);
-            break;
-        }
-        case 'v':
-        {
-            SDL_QueryTexture(textTexture, nullptr, nullptr, &textWidth, &textHeight);
-            SDL_Rect destRect = {100, 100, textWidth, textHeight};
-            SDL_RenderCopyEx(renderer, textTexture, nullptr, &destRect, 90, nullptr, SDL_FLIP_NONE);
-            break;
-        }
-        default:
-        {
-            SDL_QueryTexture(textTexture, nullptr, nullptr, &textWidth, &textHeight);
-            SDL_Rect destRect = {100, 100, textWidth, textHeight};
-            SDL_RenderCopy(renderer, textTexture, nullptr, &destRect);
-            break;
-        }
-        }
-    }
-
-    SDL_RenderPresent(renderer);
-}
 
 int main()
 {
