@@ -8,14 +8,27 @@
             "type": "shell",
             "command": "emcc",
             "args": [
-                "main.cpp",
-                "-o", "index.html"
+                "src/main.cpp", "src/api.cpp",
+                "-lSDL2_ttf", "-lSDL2",
+                "-g",
+                "-o", "draw.html",
+                "--no-entry",
+                "-s",  "WASM=1",
+                "-s","EXIT_RUNTIME=1",
+                "-s","USE_SDL=2",
+                "-s","USE_FREETYPE=1",
+                "-lharfbuzz",
+                "--preload-file", "assets/RubberNippleFactoryBlack.ttf",
+                "-sEXPORTED_FUNCTIONS=[_main, _malloc, _free, _getText, _getOrientation]",
+                "-sEXPORTED_RUNTIME_METHODS=[ccall, stringToUTF8]"
             ],
             "group": {
                 "kind": "build",
                 "isDefault": true
             },
-            "problemMatcher": ["$gcc"],
+            "problemMatcher": [
+                "$gcc"
+            ],
             "detail": "Generated task for Emscripten build"
         }
     ]
